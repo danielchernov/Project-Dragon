@@ -6,10 +6,13 @@ using UnityEngine.AI;
 public class Mover : MonoBehaviour
 {
     private NavMeshAgent _playerAgent;
+    private Animator _playerAnim;
+    private float forwardSpeed;
 
     void Start()
     {
         _playerAgent = GetComponent<NavMeshAgent>();
+        _playerAnim = GetComponent<Animator>();
     }
 
     void Update()
@@ -18,6 +21,8 @@ public class Mover : MonoBehaviour
         {
             MoveToCursor();
         }
+
+        AnimatePlayer();
     }
 
     private void MoveToCursor()
@@ -31,5 +36,13 @@ public class Mover : MonoBehaviour
         {
             _playerAgent.SetDestination(hitInfo.point);
         }
+    }
+
+    private void AnimatePlayer()
+    {
+        forwardSpeed = (transform.InverseTransformDirection(_playerAgent.velocity)).z;
+        _playerAnim.SetFloat("forwardSpeed", forwardSpeed);
+
+        Debug.Log(forwardSpeed);
     }
 }
