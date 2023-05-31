@@ -8,8 +8,8 @@ namespace RPG.Combat
 {
     public class Fighter : MonoBehaviour, IAction
     {
-        public Transform target { get; private set; }
-        float _timeSinceLastAttack = 0;
+        private Health target;
+        private float _timeSinceLastAttack = Mathf.Infinity;
 
         [SerializeField]
         private float _weaponRange = 2f;
@@ -25,10 +25,12 @@ namespace RPG.Combat
             _timeSinceLastAttack += Time.deltaTime;
             if (target == null)
                 return;
+            if (target.IsDead())
+                return;
 
             if (!IsInRange())
             {
-                GetComponent<Mover>().MoveTo(target.position);
+                GetComponent<Mover>().MoveTo(target.transform.position);
             }
             else
             {
@@ -40,8 +42,11 @@ namespace RPG.Combat
 
         private void AttackBehaviour()
         {
+            transform.LookAt(target.transform);
+
             if (_timeSinceLastAttack > _attackRate)
             {
+                GetComponent<Animator>().ResetTrigger("StopAttack");
                 GetComponent<Animator>().SetTrigger("Attack");
                 _timeSinceLastAttack = 0;
             }
@@ -50,23 +55,34 @@ namespace RPG.Combat
         // Animation Event
         void Hit()
         {
-            target.GetComponent<Health>().TakeDamage(_weaponDamage);
+            if (target != null)
+            {
+                target.TakeDamage(_weaponDamage);
+            }
         }
 
         public void Cancel()
         {
             target = null;
+
+            GetComponent<Animator>().ResetTrigger("Attack");
+            GetComponent<Animator>().SetTrigger("StopAttack");
         }
 
         private bool IsInRange()
         {
-            return Vector3.Distance(transform.position, target.position) < _weaponRange;
+            return Vector3.Distance(transform.position, target.transform.position) < _weaponRange;
         }
 
-        public void Attack(CombatTarget combatTarget)
+        public void Attack(GameObject combatTarget)
         {
-            target = combatTarget.transform;
+            target = combatTarget.GetComponent<Health>();
             GetComponent<ActionScheduler>().StartAction(this);
+        }
+
+        public bool CanAttack(GameObject combatTarget)
+        {
+            return combatTarget != null && !combatTarget.GetComponent<Health>().IsDead();
         }
     }
 }

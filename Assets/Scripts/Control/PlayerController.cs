@@ -3,20 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 using RPG.Movement;
 using RPG.Combat;
-using System;
+using RPG.Core;
 
 namespace RPG.Control
 {
     public class PlayerController : MonoBehaviour
     {
+        private Fighter _fighter;
+        private Health _health;
+
+        private void Start()
+        {
+            _fighter = GetComponent<Fighter>();
+            _health = GetComponent<Health>();
+        }
+
         void Update()
         {
+            if (_health.IsDead())
+                return;
             if (InteractWithCombat())
                 return;
             if (InteractWithMovement())
                 return;
-
-            //Debug.Log("Nothing to do.");
         }
 
         private bool InteractWithCombat()
@@ -30,9 +39,12 @@ namespace RPG.Control
                 if (target == null)
                     continue;
 
+                if (!_fighter.CanAttack(target.gameObject))
+                    continue;
+
                 if (Input.GetMouseButtonDown(0))
                 {
-                    GetComponent<Fighter>().Attack(target);
+                    _fighter.Attack(target.gameObject);
                 }
                 return true;
             }
