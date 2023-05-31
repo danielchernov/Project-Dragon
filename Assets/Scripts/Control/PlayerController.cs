@@ -16,7 +16,7 @@ namespace RPG.Control
             if (InteractWithMovement())
                 return;
 
-            Debug.Log("Nothing to do.");
+            //Debug.Log("Nothing to do.");
         }
 
         private bool InteractWithCombat()
