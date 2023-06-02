@@ -8,49 +8,53 @@ namespace RPG.Movement
 {
     public class Mover : MonoBehaviour, IAction
     {
-        private NavMeshAgent _playerAgent;
-        private Animator _playerAnim;
+        private NavMeshAgent _agent;
+        private Animator _anim;
         private float forwardSpeed;
         private Health _health;
 
+        [SerializeField]
+        private float _maxSpeed = 5.66f;
+
         void Start()
         {
-            _playerAgent = GetComponent<NavMeshAgent>();
-            _playerAnim = GetComponent<Animator>();
+            _agent = GetComponent<NavMeshAgent>();
+            _anim = GetComponent<Animator>();
             _health = GetComponent<Health>();
         }
 
         void Update()
         {
-            _playerAgent.enabled = !_health.IsDead();
+            _agent.enabled = !_health.IsDead();
 
             AnimatePlayer();
         }
 
         public void Cancel()
         {
-            _playerAgent.isStopped = true;
+            _agent.isStopped = true;
         }
 
-        public void StartMoveAction(Vector3 destination)
+        public void StartMoveAction(Vector3 destination, float speedFraction)
         {
-            MoveTo(destination);
+            MoveTo(destination, speedFraction);
 
             GetComponent<ActionScheduler>().StartAction(this);
         }
 
-        public void MoveTo(Vector3 destination)
+        public void MoveTo(Vector3 destination, float speedFraction)
         {
-            _playerAgent.SetDestination(destination);
+            _agent.speed = _maxSpeed * Mathf.Clamp01(speedFraction);
+            _agent.SetDestination(destination);
 
-            if (_playerAgent.isStopped)
-                _playerAgent.isStopped = false;
+            if (_agent.isStopped)
+                _agent.isStopped = false;
         }
 
         private void AnimatePlayer()
         {
-            forwardSpeed = (transform.InverseTransformDirection(_playerAgent.velocity)).z;
-            _playerAnim.SetFloat("forwardSpeed", forwardSpeed);
+            forwardSpeed = (transform.InverseTransformDirection(_agent.velocity)).z;
+            _anim.SetFloat("forwardSpeed", forwardSpeed);
         }
     }
 }

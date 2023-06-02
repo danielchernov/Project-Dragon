@@ -64,6 +64,18 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: _attackRate
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: _weaponDamage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: _attackSpeedFraction
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 2541352731409115807, guid: b99c393a97f536e4abf5686d92185606, type: 3}
       propertyPath: m_Name
       value: Enemy
@@ -118,7 +130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
       propertyPath: _maxHealth
-      value: 20
+      value: 40
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1662585973742760804, guid: b99c393a97f536e4abf5686d92185606, type: 3}
@@ -133,20 +145,6 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2541352731409115807, guid: b99c393a97f536e4abf5686d92185606, type: 3}
   m_PrefabInstance: {fileID: 7131299303783114826}
   m_PrefabAsset: {fileID: 0}
---- !u!136 &3242981070535080975
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4734343372865553109}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  m_Radius: 0.3
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
 --- !u!114 &2046167838767255285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -160,6 +158,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _chaseDistance: 5
+  _suspicionTime: 5
+  _dwellingTime: 2
+  _patrolPath: {fileID: 0}
+  _waypointTolerance: 1
+  _patrolSpeedFraction: 0.5
 --- !u!114 &6915356177760588008
 MonoBehaviour:
   m_ObjectHideFlags: 0

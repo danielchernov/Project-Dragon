@@ -38,7 +38,6 @@ namespace RPG.Core
         {
             if (_isAlreadyDead)
                 return;
-            print(this + " Died");
             GetComponent<Animator>().SetTrigger("Die");
             GetComponent<ActionScheduler>().CancelCurrentAction();
             _isAlreadyDead = true;

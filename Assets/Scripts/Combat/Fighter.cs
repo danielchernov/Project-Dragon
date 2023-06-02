@@ -20,6 +20,9 @@ namespace RPG.Combat
         [SerializeField]
         private float _weaponDamage = 10f;
 
+        [SerializeField]
+        private float _attackSpeedFraction = 1f;
+
         private void Update()
         {
             _timeSinceLastAttack += Time.deltaTime;
@@ -30,7 +33,7 @@ namespace RPG.Combat
 
             if (!IsInRange())
             {
-                GetComponent<Mover>().MoveTo(target.transform.position);
+                GetComponent<Mover>().MoveTo(target.transform.position, _attackSpeedFraction);
             }
             else
             {
@@ -67,6 +70,8 @@ namespace RPG.Combat
 
             GetComponent<Animator>().ResetTrigger("Attack");
             GetComponent<Animator>().SetTrigger("StopAttack");
+
+            GetComponent<Mover>().Cancel();
         }
 
         private bool IsInRange()
