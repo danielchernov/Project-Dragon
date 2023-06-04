@@ -11,6 +11,10 @@ PrefabInstance:
       propertyPath: _attackRate
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2453818173364180667, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: uniqueIdentifier
+      value: Player
+      objectReference: {fileID: 0}
     - target: {fileID: 2541352731409115807, guid: b99c393a97f536e4abf5686d92185606, type: 3}
       propertyPath: m_Name
       value: Player

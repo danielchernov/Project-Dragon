@@ -4,10 +4,11 @@ using RPG.Core;
 using UnityEngine;
 using UnityEngine.AI;
 using RPG.Saving;
+using Newtonsoft.Json.Linq;
 
 namespace RPG.Movement
 {
-    public class Mover : MonoBehaviour, IAction, ISaveable
+    public class Mover : MonoBehaviour, IAction, ISaveable, IJsonSaveable
     {
         private NavMeshAgent _agent;
         private Animator _anim;
@@ -76,6 +77,19 @@ namespace RPG.Movement
             transform.eulerAngles = ((SerializableVector3)data["rotation"]).ToVector();
 
             GetComponent<NavMeshAgent>().enabled = true;
+        }
+
+        public JToken CaptureAsJToken()
+        {
+            return transform.position.ToToken();
+        }
+
+        public void RestoreFromJToken(JToken state)
+        {
+            _agent.enabled = false;
+            transform.position = state.ToVector3();
+            _agent.enabled = true;
+            GetComponent<ActionScheduler>().CancelCurrentAction();
         }
     }
 }
