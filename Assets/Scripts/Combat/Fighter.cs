@@ -12,16 +12,25 @@ namespace RPG.Combat
         private float _timeSinceLastAttack = Mathf.Infinity;
 
         [SerializeField]
-        private float _weaponRange = 2f;
+        private float _attackSpeedFraction = 1f;
 
         [SerializeField]
         private float _attackRate = 1f;
 
         [SerializeField]
-        private float _weaponDamage = 10f;
+        private Transform _rightHandTransform = null;
 
         [SerializeField]
-        private float _attackSpeedFraction = 1f;
+        private Transform _leftHandTransform = null;
+
+        [SerializeField]
+        private Weapon _defaultWeapon = null;
+        private Weapon _currentWeapon = null;
+
+        private void Start()
+        {
+            EquipWeapon(_defaultWeapon);
+        }
 
         private void Update()
         {
@@ -43,6 +52,13 @@ namespace RPG.Combat
             }
         }
 
+        public void EquipWeapon(Weapon weapon)
+        {
+            _currentWeapon = weapon;
+            Animator anim = GetComponent<Animator>();
+            _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, anim);
+        }
+
         private void AttackBehaviour()
         {
             transform.LookAt(target.transform);
@@ -55,13 +71,25 @@ namespace RPG.Combat
             }
         }
 
-        // Animation Event
+        // Animation Events
         void Hit()
         {
-            if (target != null)
+            if (target == null)
+                return;
+
+            if (_currentWeapon.HasProjectile())
             {
-                target.TakeDamage(_weaponDamage);
+                _currentWeapon.LaunchProjectile(_rightHandTransform, _leftHandTransform, target);
             }
+            else
+            {
+                target.TakeDamage(_currentWeapon.GetDamage());
+            }
+        }
+
+        void Shoot()
+        {
+            Hit();
         }
 
         public void Cancel()
@@ -76,7 +104,8 @@ namespace RPG.Combat
 
         private bool IsInRange()
         {
-            return Vector3.Distance(transform.position, target.transform.position) < _weaponRange;
+            return Vector3.Distance(transform.position, target.transform.position)
+                < _currentWeapon.GetRange();
         }
 
         public void Attack(GameObject combatTarget)

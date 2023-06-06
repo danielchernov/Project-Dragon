@@ -5,6 +5,7 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 4734343372865553065}
     m_Modifications:
     - target: {fileID: 133518, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
@@ -56,14 +57,37 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+--- !u!4 &5312042799187646760 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 417656, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+  m_PrefabInstance: {fileID: 5312042799188018768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5312042799187652958 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 423694, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+  m_PrefabInstance: {fileID: 5312042799188018768}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5312042799187710300 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 481036, guid: 30cf93deff988e74e88a144bd2127c18, type: 3}
+  m_PrefabInstance: {fileID: 5312042799188018768}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7131299303783114826
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: weapon
+      value: 
+      objectReference: {fileID: 11400000, guid: 4baef3c660e00f24293b2f72c6bd1f85, type: 2}
     - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
       propertyPath: _attackRate
       value: 1.5
@@ -72,6 +96,18 @@ PrefabInstance:
       propertyPath: _weaponDamage
       value: 5
       objectReference: {fileID: 0}
+    - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: _handTransform
+      value: 
+      objectReference: {fileID: 5312042799187652958}
+    - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: _leftHandTransform
+      value: 
+      objectReference: {fileID: 5312042799187710300}
+    - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: _rightHandTransform
+      value: 
+      objectReference: {fileID: 5312042799187652958}
     - target: {fileID: 455788128255229145, guid: b99c393a97f536e4abf5686d92185606, type: 3}
       propertyPath: _attackSpeedFraction
       value: 0.8
@@ -138,6 +174,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1662585973742760804, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 2541352731409115875, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5312042799187646760}
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2541352731409115807, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2046167838767255285}
+    - targetCorrespondingSourceObject: {fileID: 2541352731409115807, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6915356177760588008}
   m_SourcePrefab: {fileID: 100100000, guid: b99c393a97f536e4abf5686d92185606, type: 3}
 --- !u!4 &4734343372865553065 stripped
 Transform:
