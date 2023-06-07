@@ -86,9 +86,11 @@ namespace RPG.Movement
 
         public void RestoreFromJToken(JToken state)
         {
-            _agent.enabled = false;
+            if (_agent != null)
+                _agent.enabled = false;
             transform.position = state.ToVector3();
-            _agent.enabled = true;
+            if (_agent != null)
+                _agent.enabled = true;
             GetComponent<ActionScheduler>().CancelCurrentAction();
         }
     }

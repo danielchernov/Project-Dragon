@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using RPG.Core;
 using RPG.Movement;
+using RPG.Saving;
+using Newtonsoft.Json.Linq;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction
+    public class Fighter : MonoBehaviour, IAction, IJsonSaveable
     {
         private Health target;
         private float _timeSinceLastAttack = Mathf.Infinity;
@@ -29,7 +31,8 @@ namespace RPG.Combat
 
         private void Start()
         {
-            EquipWeapon(_defaultWeapon);
+            if (_currentWeapon == null)
+                EquipWeapon(_defaultWeapon);
         }
 
         private void Update()
@@ -56,7 +59,7 @@ namespace RPG.Combat
         {
             _currentWeapon = weapon;
             Animator anim = GetComponent<Animator>();
-            _currentWeapon.SpawnWeapon(_rightHandTransform, _leftHandTransform, anim);
+            _currentWeapon.Spawn(_rightHandTransform, _leftHandTransform, anim);
         }
 
         private void AttackBehaviour()
@@ -117,6 +120,17 @@ namespace RPG.Combat
         public bool CanAttack(GameObject combatTarget)
         {
             return combatTarget != null && !combatTarget.GetComponent<Health>().IsDead();
+        }
+
+        public JToken CaptureAsJToken()
+        {
+            return JToken.FromObject(_currentWeapon.name);
+        }
+
+        public void RestoreFromJToken(JToken state)
+        {
+            Weapon weapon = Resources.Load<Weapon>(state.ToObject<string>());
+            EquipWeapon(weapon);
         }
     }
 }

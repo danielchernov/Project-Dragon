@@ -68,10 +68,6 @@ PrefabInstance:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 01b2546c969fe814794af634cb4534f4, type: 2}
-    - target: {fileID: 6315715239923904329, guid: ad08a8e613d033e42a9f5195ab68e1bb, type: 3}
-      propertyPath: m_IsKinematic
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 7251989528641377427, guid: ad08a8e613d033e42a9f5195ab68e1bb, type: 3}
       propertyPath: _attackRate
       value: 1.2

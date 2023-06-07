@@ -24,22 +24,44 @@ namespace RPG.Combat
         [SerializeField]
         private Projectile _projectile = null;
 
-        public void SpawnWeapon(
-            Transform rightHandTransform,
-            Transform leftHandTransform,
-            Animator anim
-        )
+        const string weaponName = "Weapon";
+
+        public void Spawn(Transform rightHandTransform, Transform leftHandTransform, Animator anim)
         {
+            DestroyOldWeapon(rightHandTransform, leftHandTransform);
+
             if (_equippedPrefab != null)
             {
                 Transform handTransform = GetTransform(rightHandTransform, leftHandTransform);
 
-                Instantiate(_equippedPrefab, handTransform);
+                GameObject weapon = Instantiate(_equippedPrefab, handTransform);
+                weapon.name = weaponName;
             }
+
+            var overrideControler = anim.runtimeAnimatorController as AnimatorOverrideController;
+
             if (_animatorOverride != null)
             {
                 anim.runtimeAnimatorController = _animatorOverride;
             }
+            else if (overrideControler != null)
+            {
+                anim.runtimeAnimatorController = overrideControler.runtimeAnimatorController;
+            }
+        }
+
+        private void DestroyOldWeapon(Transform rightHand, Transform leftHand)
+        {
+            Transform oldWeapon = rightHand.Find(weaponName);
+            if (oldWeapon == null)
+            {
+                oldWeapon = leftHand.Find(weaponName);
+            }
+            if (oldWeapon == null)
+                return;
+
+            oldWeapon.name = "Destroying";
+            Destroy(oldWeapon.gameObject);
         }
 
         private Transform GetTransform(Transform rightHandTransform, Transform leftHandTransform)

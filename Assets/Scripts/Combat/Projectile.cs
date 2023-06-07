@@ -13,9 +13,32 @@ namespace RPG.Combat
         private Health _target;
         private float _damage = 0;
 
-        private void Update()
+        [SerializeField]
+        private bool isHoming = false;
+
+        [SerializeField]
+        private GameObject hitEffect;
+
+        [SerializeField]
+        private float _timeToDie = 10;
+
+        [SerializeField]
+        private GameObject[] destroyOnHit;
+
+        [SerializeField]
+        private float lifeAfterImpact = 5;
+
+        private void Start()
         {
             transform.LookAt(GetAimLocation());
+        }
+
+        private void Update()
+        {
+            if (isHoming && !_target.IsDead())
+            {
+                transform.LookAt(GetAimLocation());
+            }
             transform.Translate(Vector3.forward * Time.deltaTime * _arrowSpeed);
         }
 
@@ -23,6 +46,8 @@ namespace RPG.Combat
         {
             _target = newTarget;
             _damage = damage;
+
+            Destroy(gameObject, _timeToDie);
         }
 
         private Vector3 GetAimLocation()
@@ -36,10 +61,23 @@ namespace RPG.Combat
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.GetComponent<Health>() == _target)
+            if (other.GetComponent<Health>() == _target && !_target.IsDead())
             {
                 _target.TakeDamage(_damage);
-                Destroy(gameObject);
+
+                _arrowSpeed = 0;
+
+                if (hitEffect != null)
+                {
+                    Instantiate(hitEffect, GetAimLocation(), transform.rotation);
+                }
+
+                foreach (GameObject toDestroy in destroyOnHit)
+                {
+                    Destroy(toDestroy);
+                }
+
+                Destroy(gameObject, lifeAfterImpact);
             }
         }
     }
