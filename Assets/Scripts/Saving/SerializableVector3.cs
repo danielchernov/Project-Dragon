@@ -5,7 +5,9 @@ namespace RPG.Saving
     [System.Serializable]
     public class SerializableVector3
     {
-        float x, y, z;
+        float x,
+            y,
+            z;
 
         public SerializableVector3(Vector3 vector)
         {

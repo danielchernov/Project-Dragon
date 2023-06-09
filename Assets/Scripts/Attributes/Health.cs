@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using RPG.Saving;
 using UnityEngine;
 using Newtonsoft.Json.Linq;
+using RPG.Stats;
+using RPG.Core;
 
-namespace RPG.Core
+namespace RPG.Attributes
 {
     public class Health : MonoBehaviour, ISaveable, IJsonSaveable
     {
@@ -13,19 +13,30 @@ namespace RPG.Core
 
         private bool _isAlreadyDead = false;
 
+        private void Start()
+        {
+            _currentHealth = GetComponent<BaseStats>().GetHealth();
+        }
+
         public bool IsDead()
         {
             return _isAlreadyDead;
         }
 
-        public void TakeDamage(float damage)
+        public void TakeDamage(GameObject instigator, float damage)
         {
             _currentHealth = Mathf.Max(_currentHealth - damage, 0);
 
             if (_currentHealth == 0)
             {
                 Die();
+                AwardExperience(instigator);
             }
+        }
+
+        public float GetPercentage()
+        {
+            return 100 * _currentHealth / GetComponent<BaseStats>().GetHealth();
         }
 
         private void Die()
@@ -35,6 +46,15 @@ namespace RPG.Core
             GetComponent<Animator>().SetTrigger("Die");
             GetComponent<ActionScheduler>().CancelCurrentAction();
             _isAlreadyDead = true;
+        }
+
+        private void AwardExperience(GameObject instigator)
+        {
+            Experience experience = instigator.GetComponent<Experience>();
+            if (experience == null)
+                return;
+
+            experience.GainExperience(GetComponent<BaseStats>().GetXP());
         }
 
         public object CaptureState()

@@ -1,7 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using RPG.Core;
+using RPG.Attributes;
 using RPG.Movement;
 using RPG.Saving;
 using Newtonsoft.Json.Linq;
@@ -62,6 +61,11 @@ namespace RPG.Combat
             _currentWeapon.Spawn(_rightHandTransform, _leftHandTransform, anim);
         }
 
+        public Health GetTarget()
+        {
+            return target;
+        }
+
         private void AttackBehaviour()
         {
             transform.LookAt(target.transform);
@@ -82,11 +86,16 @@ namespace RPG.Combat
 
             if (_currentWeapon.HasProjectile())
             {
-                _currentWeapon.LaunchProjectile(_rightHandTransform, _leftHandTransform, target);
+                _currentWeapon.LaunchProjectile(
+                    _rightHandTransform,
+                    _leftHandTransform,
+                    target,
+                    gameObject
+                );
             }
             else
             {
-                target.TakeDamage(_currentWeapon.GetDamage());
+                target.TakeDamage(gameObject, _currentWeapon.GetDamage());
             }
         }
 
