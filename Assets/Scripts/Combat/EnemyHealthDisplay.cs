@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using RPG.Attributes;
 
 namespace RPG.Combat
 {
@@ -15,16 +16,19 @@ namespace RPG.Combat
 
         private void Update()
         {
-            if (fighter.GetTarget() != null)
+            if (fighter.GetTarget() == null)
             {
-                valueToPrint = Mathf.Round(fighter.GetTarget().GetPercentage()) + "%";
-            }
-            else
-            {
-                valueToPrint = "N/A";
+                GetComponent<Text>().text = "N/A";
+                return;
             }
 
-            GetComponent<Text>().text = valueToPrint;
+            Health health = fighter.GetTarget();
+            GetComponent<Text>().text = string.Format(
+                "{0:0}/{1:0}",
+                health.GetHealthPoints(),
+                health.GetMaxHealthPoints()
+            );
+            ;
         }
     }
 }

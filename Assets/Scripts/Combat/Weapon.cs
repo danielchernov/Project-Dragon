@@ -84,7 +84,8 @@ namespace RPG.Combat
             Transform rightHand,
             Transform leftHand,
             Health target,
-            GameObject instigator
+            GameObject instigator,
+            float calculatedDamage
         )
         {
             Transform handTransform = GetTransform(rightHand, leftHand);
@@ -95,7 +96,7 @@ namespace RPG.Combat
                 Quaternion.identity
             );
 
-            projectileInstance.SetTarget(target, instigator, _weaponDamage);
+            projectileInstance.SetTarget(target, instigator, calculatedDamage);
         }
 
         public float GetDamage()

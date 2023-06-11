@@ -4,6 +4,7 @@ using RPG.Attributes;
 using RPG.Movement;
 using RPG.Saving;
 using Newtonsoft.Json.Linq;
+using RPG.Stats;
 
 namespace RPG.Combat
 {
@@ -84,18 +85,21 @@ namespace RPG.Combat
             if (target == null)
                 return;
 
+            float damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
+
             if (_currentWeapon.HasProjectile())
             {
                 _currentWeapon.LaunchProjectile(
                     _rightHandTransform,
                     _leftHandTransform,
                     target,
-                    gameObject
+                    gameObject,
+                    damage
                 );
             }
             else
             {
-                target.TakeDamage(gameObject, _currentWeapon.GetDamage());
+                target.TakeDamage(gameObject, damage);
             }
         }
 
