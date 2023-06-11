@@ -4,6 +4,7 @@ using RPG.Movement;
 using RPG.Core;
 using System;
 using RPG.Attributes;
+using GameDevTV.Utils;
 
 namespace RPG.Control
 {
@@ -34,21 +35,31 @@ namespace RPG.Control
         private Health _health;
 
         private float _distance;
-        private Vector3 _guardLocation;
+        LazyValue<Vector3> _guardLocation;
 
         private int _currentWaypointIndex = 0;
 
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
         private float _timeSinceWaypoint = Mathf.Infinity;
 
-        private void Start()
+        private void Awake()
         {
             _player = GameObject.FindGameObjectWithTag("Player");
             _fighter = GetComponent<Fighter>();
             _mover = GetComponent<Mover>();
             _health = GetComponent<Health>();
 
-            _guardLocation = transform.position;
+            _guardLocation = new LazyValue<Vector3>(GetGuardPosition);
+        }
+
+        private Vector3 GetGuardPosition()
+        {
+            return transform.position;
+        }
+
+        private void Start()
+        {
+            _guardLocation.ForceInit();
         }
 
         private void Update()
@@ -93,7 +104,7 @@ namespace RPG.Control
 
         private void PatrolBehaviour()
         {
-            Vector3 nextPosition = _guardLocation;
+            Vector3 nextPosition = _guardLocation.value;
 
             if (_patrolPath != null)
             {

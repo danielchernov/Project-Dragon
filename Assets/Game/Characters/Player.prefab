@@ -96,6 +96,10 @@ PrefabInstance:
       propertyPath: levelUpParticle
       value: 
       objectReference: {fileID: 7988400835301087037, guid: b4cc28f92965c124eba50b42d2abc6a6, type: 3}
+    - target: {fileID: 3870613981799961322, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: _shouldUseModifiers
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4482685850270959705, guid: b99c393a97f536e4abf5686d92185606, type: 3}
       propertyPath: uniqueIdentifier
       value: player

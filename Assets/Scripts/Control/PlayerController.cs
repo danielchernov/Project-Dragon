@@ -10,7 +10,7 @@ namespace RPG.Control
         private Fighter _fighter;
         private Health _health;
 
-        private void Start()
+        private void Awake()
         {
             _fighter = GetComponent<Fighter>();
             _health = GetComponent<Health>();
