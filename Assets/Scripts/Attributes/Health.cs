@@ -4,6 +4,7 @@ using Newtonsoft.Json.Linq;
 using RPG.Stats;
 using RPG.Core;
 using GameDevTV.Utils;
+using UnityEngine.Events;
 
 namespace RPG.Attributes
 {
@@ -11,6 +12,10 @@ namespace RPG.Attributes
     {
         [SerializeField]
         float regenerationPercentage = 70;
+
+        [SerializeField]
+        private UnityEvent<float> takeDamage;
+
         private LazyValue<float> _currentHealth;
 
         private bool _isAlreadyDead = false;
@@ -48,6 +53,8 @@ namespace RPG.Attributes
         public void TakeDamage(GameObject instigator, float damage)
         {
             _currentHealth.value = Mathf.Max(_currentHealth.value - damage, 0);
+
+            takeDamage.Invoke(damage);
 
             if (_currentHealth.value == 0)
             {
