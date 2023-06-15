@@ -1,10 +1,14 @@
 using UnityEngine;
 using RPG.Attributes;
+using UnityEngine.Events;
 
 namespace RPG.Combat
 {
     public class Projectile : MonoBehaviour
     {
+        [SerializeField]
+        UnityEvent onHit;
+
         [SerializeField]
         private float _arrowSpeed = 100;
 
@@ -67,6 +71,8 @@ namespace RPG.Combat
                 _target.TakeDamage(_instigator, _damage);
 
                 _arrowSpeed = 0;
+
+                onHit.Invoke();
 
                 if (hitEffect != null)
                 {

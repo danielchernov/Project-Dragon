@@ -14,7 +14,10 @@ namespace RPG.Control
         private float _chaseDistance = 5f;
 
         [SerializeField]
-        private float _suspicionTime = 5f;
+        private float _suspicionTime = 3f;
+
+        [SerializeField]
+        private float _aggroTime = 5f;
 
         [SerializeField]
         private float _dwellingTime = 2f;
@@ -25,6 +28,9 @@ namespace RPG.Control
         [SerializeField]
         private float _waypointTolerance = 1;
 
+        [SerializeField]
+        private float _shoutDistance = 5;
+
         [Range(0, 1)]
         [SerializeField]
         private float _patrolSpeedFraction = 0.5f;
@@ -34,13 +40,13 @@ namespace RPG.Control
         private Mover _mover;
         private Health _health;
 
-        private float _distance;
         LazyValue<Vector3> _guardLocation;
 
         private int _currentWaypointIndex = 0;
 
         private float _timeSinceLastSawPlayer = Mathf.Infinity;
         private float _timeSinceWaypoint = Mathf.Infinity;
+        private float _timeSinceAggro = Mathf.Infinity;
 
         private void Awake()
         {
@@ -67,9 +73,7 @@ namespace RPG.Control
             if (_health.IsDead())
                 return;
 
-            _distance = Vector3.Distance(_player.transform.position, transform.position);
-
-            if (_distance < _chaseDistance && _fighter.CanAttack(_player))
+            if (IsAggravated() && _fighter.CanAttack(_player))
             {
                 _timeSinceLastSawPlayer = 0;
                 AttackBehaviour();
@@ -86,10 +90,23 @@ namespace RPG.Control
             UpdateTimers();
         }
 
+        public void Aggravate()
+        {
+            _timeSinceAggro = 0;
+        }
+
+        private bool IsAggravated()
+        {
+            float distance = Vector3.Distance(_player.transform.position, transform.position);
+
+            return distance < _chaseDistance || _timeSinceAggro < _aggroTime;
+        }
+
         private void UpdateTimers()
         {
             _timeSinceLastSawPlayer += Time.deltaTime;
             _timeSinceWaypoint += Time.deltaTime;
+            _timeSinceAggro += Time.deltaTime;
         }
 
         private void SuspicionBehaviour()
@@ -100,6 +117,28 @@ namespace RPG.Control
         private void AttackBehaviour()
         {
             _fighter.Attack(_player);
+
+            AggravateNearbyEnemies();
+        }
+
+        private void AggravateNearbyEnemies()
+        {
+            RaycastHit[] hits = Physics.SphereCastAll(
+                transform.position,
+                _shoutDistance,
+                Vector3.up,
+                0
+            );
+
+            foreach (RaycastHit hit in hits)
+            {
+                AIController ai = hit.transform.GetComponent<AIController>();
+
+                if (ai != null)
+                {
+                    ai.Aggravate();
+                }
+            }
         }
 
         private void PatrolBehaviour()
@@ -139,17 +178,17 @@ namespace RPG.Control
         }
 
         // Called by Unity
-        private void OnDrawGizmos()
-        {
-            if (_distance < _chaseDistance)
-            {
-                Gizmos.color = Color.red;
-            }
-            else
-            {
-                Gizmos.color = Color.blue;
-            }
-            Gizmos.DrawWireSphere(transform.position, _chaseDistance);
-        }
+        // private void OnDrawGizmos()
+        // {
+        //     if (distance < _chaseDistance)
+        //     {
+        //         Gizmos.color = Color.red;
+        //     }
+        //     else
+        //     {
+        //         Gizmos.color = Color.blue;
+        //     }
+        //     Gizmos.DrawWireSphere(transform.position, _chaseDistance);
+        // }
     }
 }

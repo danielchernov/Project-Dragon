@@ -29,18 +29,20 @@ namespace RPG.Combat
         private Transform _leftHandTransform = null;
 
         [SerializeField]
-        private Weapon _defaultWeapon = null;
+        private WeaponConfig _defaultWeapon = null;
+
+        WeaponConfig _currentWeaponConfig;
         LazyValue<Weapon> _currentWeapon;
 
         private void Awake()
         {
+            _currentWeaponConfig = _defaultWeapon;
             _currentWeapon = new LazyValue<Weapon>(SetupDefaultWeapon);
         }
 
         private Weapon SetupDefaultWeapon()
         {
-            AttachWeapon(_defaultWeapon);
-            return _defaultWeapon;
+            return AttachWeapon(_defaultWeapon);
         }
 
         private void Start()
@@ -56,7 +58,7 @@ namespace RPG.Combat
             if (target.IsDead())
                 return;
 
-            if (!IsInRange())
+            if (!IsInRange(target.transform))
             {
                 GetComponent<Mover>().MoveTo(target.transform.position, _attackSpeedFraction);
             }
@@ -68,16 +70,16 @@ namespace RPG.Combat
             }
         }
 
-        public void EquipWeapon(Weapon weapon)
+        public void EquipWeapon(WeaponConfig weapon)
         {
-            _currentWeapon.value = weapon;
-            AttachWeapon(weapon);
+            _currentWeaponConfig = weapon;
+            _currentWeapon.value = AttachWeapon(weapon);
         }
 
-        private void AttachWeapon(Weapon weapon)
+        private Weapon AttachWeapon(WeaponConfig weapon)
         {
             Animator anim = GetComponent<Animator>();
-            weapon.Spawn(_rightHandTransform, _leftHandTransform, anim);
+            return weapon.Spawn(_rightHandTransform, _leftHandTransform, anim);
         }
 
         public Health GetTarget()
@@ -105,9 +107,14 @@ namespace RPG.Combat
 
             float damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
 
-            if (_currentWeapon.value.HasProjectile())
+            if (_currentWeapon.value != null)
             {
-                _currentWeapon.value.LaunchProjectile(
+                _currentWeapon.value.OnHit();
+            }
+
+            if (_currentWeaponConfig.HasProjectile())
+            {
+                _currentWeaponConfig.LaunchProjectile(
                     _rightHandTransform,
                     _leftHandTransform,
                     target,
@@ -140,7 +147,7 @@ namespace RPG.Combat
         {
             if (stat == Stat.Damage)
             {
-                yield return _currentWeapon.value.GetDamage();
+                yield return _currentWeaponConfig.GetDamage();
             }
         }
 
@@ -148,14 +155,14 @@ namespace RPG.Combat
         {
             if (stat == Stat.Damage)
             {
-                yield return _currentWeapon.value.GetPercentageBonus();
+                yield return _currentWeaponConfig.GetPercentageBonus();
             }
         }
 
-        private bool IsInRange()
+        private bool IsInRange(Transform targetTransform)
         {
-            return Vector3.Distance(transform.position, target.transform.position)
-                < _currentWeapon.value.GetRange();
+            return Vector3.Distance(transform.position, targetTransform.transform.position)
+                < _currentWeaponConfig.GetRange();
         }
 
         public void Attack(GameObject combatTarget)
@@ -166,17 +173,27 @@ namespace RPG.Combat
 
         public bool CanAttack(GameObject combatTarget)
         {
-            return combatTarget != null && !combatTarget.GetComponent<Health>().IsDead();
+            if (combatTarget == null)
+                return false;
+
+            if (
+                !GetComponent<Mover>().CanMoveTo(combatTarget.transform.position)
+                && !IsInRange(combatTarget.transform)
+            )
+                return false;
+
+            Health healthToTest = combatTarget.GetComponent<Health>();
+            return healthToTest != null && !healthToTest.IsDead();
         }
 
         public JToken CaptureAsJToken()
         {
-            return JToken.FromObject(_currentWeapon.value.name);
+            return JToken.FromObject(_currentWeaponConfig.name);
         }
 
         public void RestoreFromJToken(JToken state)
         {
-            Weapon weapon = Resources.Load<Weapon>(state.ToObject<string>());
+            WeaponConfig weapon = Resources.Load<WeaponConfig>(state.ToObject<string>());
             EquipWeapon(weapon);
         }
     }

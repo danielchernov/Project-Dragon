@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b81f9f0cb036a5344afec5c0e517be9c, type: 3}
   m_Name: EnemyBow
   m_EditorClassIdentifier: 
-  _equippedPrefab: {fileID: 8641746518111119432, guid: 442f2796edde3754a81e0ad0df910bd4, type: 3}
+  _equippedPrefab: {fileID: 4805726416880374375, guid: 442f2796edde3754a81e0ad0df910bd4, type: 3}
   _animatorOverride: {fileID: 22100000, guid: d860f60e2a65f4748b58d64b022f9fef, type: 2}
   _weaponRange: 10
   _weaponDamage: 5

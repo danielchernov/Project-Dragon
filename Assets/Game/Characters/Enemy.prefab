@@ -176,6 +176,34 @@ PrefabInstance:
       propertyPath: _currentHealth
       value: 40
       objectReference: {fileID: 0}
+    - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 2046167838767255285}
+    - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: Aggravate
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: RPG.Control.AIController, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5720903870403201519, guid: b99c393a97f536e4abf5686d92185606, type: 3}
+      propertyPath: takeDamage.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 1662585973742760804, guid: b99c393a97f536e4abf5686d92185606, type: 3}
     m_RemovedGameObjects: []
@@ -215,6 +243,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _chaseDistance: 5
   _suspicionTime: 5
+  _aggroTime: 5
   _dwellingTime: 2
   _patrolPath: {fileID: 0}
   _waypointTolerance: 1
