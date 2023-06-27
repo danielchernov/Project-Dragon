@@ -3,7 +3,7 @@ using UnityEngine;
 using Newtonsoft.Json.Linq;
 using RPG.Stats;
 using RPG.Core;
-using GameDevTV.Utils;
+using RPG.Utils;
 using UnityEngine.Events;
 using System;
 

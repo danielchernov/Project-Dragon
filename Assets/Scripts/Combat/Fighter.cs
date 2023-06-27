@@ -6,7 +6,7 @@ using RPG.Saving;
 using Newtonsoft.Json.Linq;
 using RPG.Stats;
 using System.Collections.Generic;
-using GameDevTV.Utils;
+using RPG.Utils;
 using System;
 
 namespace RPG.Combat
