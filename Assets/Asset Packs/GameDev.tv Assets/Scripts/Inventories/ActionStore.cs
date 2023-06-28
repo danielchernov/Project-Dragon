@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Saving;
+using Newtonsoft.Json.Linq;
 
 namespace RPG.Inventories
 {
@@ -11,7 +12,7 @@ namespace RPG.Inventories
     ///
     /// This component should be placed on the GameObject tagged "Player".
     /// </summary>
-    public class ActionStore : MonoBehaviour, ISaveable
+    public class ActionStore : MonoBehaviour, ISaveable, IJsonSaveable
     {
         // STATE
         Dictionary<int, DockedItemSlot> dockedItems = new Dictionary<int, DockedItemSlot>();
@@ -185,6 +186,42 @@ namespace RPG.Inventories
             foreach (var pair in stateDict)
             {
                 AddAction(InventoryItem.GetFromID(pair.Value.itemID), pair.Key, pair.Value.number);
+            }
+        }
+
+        public JToken CaptureAsJToken()
+        {
+            JObject state = new JObject();
+            IDictionary<string, JToken> stateDict = state;
+            foreach (var pair in dockedItems)
+            {
+                JObject dockedState = new JObject();
+                IDictionary<string, JToken> dockedStateDict = dockedState;
+                dockedStateDict["item"] = JToken.FromObject(pair.Value.item.GetItemID());
+                dockedStateDict["number"] = JToken.FromObject(pair.Value.number);
+                stateDict[pair.Key.ToString()] = dockedState;
+            }
+            return state;
+        }
+
+        public void RestoreFromJToken(JToken state)
+        {
+            if (state is JObject stateObject)
+            {
+                IDictionary<string, JToken> stateDict = stateObject;
+                foreach (var pair in stateDict)
+                {
+                    if (pair.Value is JObject dockedState)
+                    {
+                        int key = Int32.Parse(pair.Key);
+                        IDictionary<string, JToken> dockedStateDict = dockedState;
+                        var item = InventoryItem.GetFromID(
+                            dockedStateDict["item"].ToObject<string>()
+                        );
+                        int number = dockedStateDict["number"].ToObject<int>();
+                        AddAction(item, key, number);
+                    }
+                }
             }
         }
     }

@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 using RPG.Saving;
+using Newtonsoft.Json.Linq;
 
 namespace RPG.Inventories
 {
     /// <summary>
     /// Provides a store for the items equipped to a player. Items are stored by
     /// their equip locations.
-    /// 
+    ///
     /// This component should be placed on the GameObject tagged "Player".
     /// </summary>
-    public class Equipment : MonoBehaviour, ISaveable
+    public class Equipment : MonoBehaviour, ISaveable, IJsonSaveable
     {
         // STATE
-        Dictionary<EquipLocation, EquipableItem> equippedItems = new Dictionary<EquipLocation, EquipableItem>();
+        Dictionary<EquipLocation, EquipableItem> equippedItems =
+            new Dictionary<EquipLocation, EquipableItem>();
 
         // PUBLIC
 
@@ -98,6 +100,40 @@ namespace RPG.Inventories
                     equippedItems[pair.Key] = item;
                 }
             }
+        }
+
+        public JToken CaptureAsJToken()
+        {
+            JObject state = new JObject();
+            IDictionary<string, JToken> stateDict = state;
+            foreach (var pair in equippedItems)
+            {
+                stateDict[pair.Key.ToString()] = JToken.FromObject(pair.Value.GetItemID());
+            }
+            return state;
+        }
+
+        public void RestoreFromJToken(JToken state)
+        {
+            if (state is JObject stateObject)
+            {
+                equippedItems.Clear();
+                IDictionary<string, JToken> stateDict = stateObject;
+                foreach (var pair in stateObject)
+                {
+                    if (Enum.TryParse(pair.Key, true, out EquipLocation key))
+                    {
+                        if (
+                            InventoryItem.GetFromID(pair.Value.ToObject<string>())
+                            is EquipableItem item
+                        )
+                        {
+                            equippedItems[key] = item;
+                        }
+                    }
+                }
+            }
+            equipmentUpdated?.Invoke();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using RPG.Saving;
+using Newtonsoft.Json.Linq;
 
 namespace RPG.Inventories
 {
@@ -7,7 +8,7 @@ namespace RPG.Inventories
     /// Spawns pickups that should exist on first load in a level. This
     /// automatically spawns the correct prefab for a given inventory item.
     /// </summary>
-    public class PickupSpawner : MonoBehaviour, ISaveable
+    public class PickupSpawner : MonoBehaviour, ISaveable, IJsonSaveable
     {
         // CONFIG DATA
         [SerializeField]
@@ -66,6 +67,26 @@ namespace RPG.Inventories
         void ISaveable.RestoreState(object state)
         {
             bool shouldBeCollected = (bool)state;
+
+            if (shouldBeCollected && !isCollected())
+            {
+                DestroyPickup();
+            }
+
+            if (!shouldBeCollected && isCollected())
+            {
+                SpawnPickup();
+            }
+        }
+
+        public JToken CaptureAsJToken()
+        {
+            return JToken.FromObject(isCollected());
+        }
+
+        public void RestoreFromJToken(JToken state)
+        {
+            bool shouldBeCollected = state.ToObject<bool>();
 
             if (shouldBeCollected && !isCollected())
             {

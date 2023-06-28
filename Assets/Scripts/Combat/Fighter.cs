@@ -8,10 +8,11 @@ using RPG.Stats;
 using System.Collections.Generic;
 using RPG.Utils;
 using System;
+using RPG.Inventories;
 
 namespace RPG.Combat
 {
-    public class Fighter : MonoBehaviour, IAction, IJsonSaveable, IModifierProvider
+    public class Fighter : MonoBehaviour, IAction, IJsonSaveable
     {
         private Health target;
         private float _timeSinceLastAttack = Mathf.Infinity;
@@ -34,10 +35,18 @@ namespace RPG.Combat
         WeaponConfig _currentWeaponConfig;
         LazyValue<Weapon> _currentWeapon;
 
+        private Equipment _equipment;
+
         private void Awake()
         {
             _currentWeaponConfig = _defaultWeapon;
             _currentWeapon = new LazyValue<Weapon>(SetupDefaultWeapon);
+
+            _equipment = GetComponent<Equipment>();
+            if (_equipment)
+            {
+                _equipment.equipmentUpdated += UpdateWeapon;
+            }
         }
 
         private Weapon SetupDefaultWeapon()
@@ -99,6 +108,19 @@ namespace RPG.Combat
             }
         }
 
+        private void UpdateWeapon()
+        {
+            var weapon = _equipment.GetItemInSlot(EquipLocation.Weapon) as WeaponConfig;
+            if (weapon == null)
+            {
+                EquipWeapon(_defaultWeapon);
+            }
+            else
+            {
+                EquipWeapon(weapon);
+            }
+        }
+
         // Animation Events
         void Hit()
         {
@@ -141,22 +163,6 @@ namespace RPG.Combat
             GetComponent<Animator>().SetTrigger("StopAttack");
 
             GetComponent<Mover>().Cancel();
-        }
-
-        public IEnumerable<float> GetAdditiveModifiers(Stat stat)
-        {
-            if (stat == Stat.Damage)
-            {
-                yield return _currentWeaponConfig.GetDamage();
-            }
-        }
-
-        public IEnumerable<float> GetPercentageModifiers(Stat stat)
-        {
-            if (stat == Stat.Damage)
-            {
-                yield return _currentWeaponConfig.GetPercentageBonus();
-            }
         }
 
         private bool IsInRange(Transform targetTransform)
